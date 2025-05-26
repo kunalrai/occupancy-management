@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white p-8 mt-10 shadow-lg rounded-xl fade-in">
+    <h2 class="text-2xl font-semibold text-blue-700 mb-6 text-center">
+        Upload Badge Access CSV
+    </h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                    <div class="p-3 rounded text-white {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Upload Form -->
+    <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div>
+            <label for="file" class="block text-sm font-medium text-gray-700">Select CSV File</label>
+            <input
+                type="file"
+                name="file"
+                id="file"
+                accept=".csv"
+                required
+                class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2"
+            >
+        </div>
+
+        <div class="flex justify-center">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">
+                Upload
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

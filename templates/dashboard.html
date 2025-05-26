@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Badge Access Dashboard</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="mb-4">
+                {% for category, message in messages %}
+                    <div class="p-3 rounded text-white {{ 'bg-green-500' if category == 'success' else 'bg-red-500' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-lg shadow hover-lift text-center">
+            <h3 class="text-sm text-gray-500">Total Records</h3>
+            <p class="text-2xl font-bold text-blue-800">{{ total_records }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover-lift text-center">
+            <h3 class="text-sm text-gray-500">Unique Sites</h3>
+            <p class="text-2xl font-bold text-blue-800">{{ unique_sites }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover-lift text-center">
+            <h3 class="text-sm text-gray-500">Date Range</h3>
+            <p class="text-lg text-gray-700">{{ date_range }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow hover-lift text-center">
+            <h3 class="text-sm text-gray-500">Unique Badge Holders</h3>
+            <p class="text-2xl font-bold text-blue-800">{{ unique_gid }}</p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Bar Chart -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Logins per Site</h3>
+            <canvas id="barChart"></canvas>
+        </div>
+
+        <!-- Line Chart -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Logins per Day</h3>
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN + Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const siteLabels = {{ site_labels | tojson }};
+    const siteData = {{ site_counts | tojson }};
+    const dateLabels = {{ date_labels | tojson }};
+    const dateData = {{ date_counts | tojson }};
+
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: siteLabels,
+            datasets: [{
+                label: 'Logins',
+                data: siteData,
+                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('lineChart'), {
+        type: 'line',
+        data: {
+            labels: dateLabels,
+            datasets: [{
+                label: 'Logins',
+                data: dateData,
+                fill: false,
+                borderColor: 'rgba(16, 185, 129, 1)',
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+    <!-- Data Table -->
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full table-auto">
+            <thead class="bg-blue-800 text-white text-left text-sm uppercase tracking-wider">
+                <tr>
+                    <th class="px-6 py-3">Site Name</th>
+                    <th class="px-6 py-3">Global ID</th>
+                    <th class="px-6 py-3">Initial Login Date</th>
+                    <th class="px-6 py-3">Badge ID</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 text-sm divide-y divide-gray-200">
+                {% for row in records %}
+                <tr class="hover:bg-blue-50 transition">
+                    <td class="px-6 py-4">{{ row.site_name }}</td>
+                    <td class="px-6 py-4">{{ row.global_id }}</td>
+                    <td class="px-6 py-4">{{ row.initial_login_date }}</td>
+                    <td class="px-6 py-4">{{ row.badge_id }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center py-6 text-gray-500">No records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination (if implemented) -->
+    {% if pagination %}
+    <div class="mt-6 flex justify-center space-x-2">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for('dashboard', page=pagination.prev_num) }}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">Previous</a>
+        {% endif %}
+        <span class="px-4 py-2 text-gray-600">Page {{ pagination.page }} of {{ pagination.pages }}</span>
+        {% if pagination.has_next %}
+        <a href="{{ url_for('dashboard', page=pagination.next_num) }}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

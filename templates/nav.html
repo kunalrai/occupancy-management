@@ -1,0 +1,17 @@
+<nav class="bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
+                <a href="{{ url_for('home') }}" class="flex items-center no-underline hover:opacity-80 transition-opacity">
+    <i class="fas fa-id-card-alt text-2xl mr-3"></i>
+    <span class="font-semibold text-xl">Badge Access Manager</span>
+</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="{{ url_for('home') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Home</a>
+                <a href="{{ url_for('upload') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Upload</a>
+                <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Dashboard</a>
+            </div>
+        </div>
+    </div>
+</nav>
