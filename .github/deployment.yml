@@ -1,0 +1,48 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+name: 'Build and deploy Python app to Azure Web App: dellwarranty'
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python version
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.12'
+    
+    - name: Create deployment script
+      run: |
+        echo 'pip install -r requirements.txt' > build.sh
+        echo 'gunicorn --bind=0.0.0.0 --timeout 600 app:app' >> build.sh
+        chmod +x build.sh
+    
+    - name: Install and verify dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip list | grep -i limiter
+    
+    - name: Create .deployment file
+      run: |
+        echo '[config]' > .deployment
+        echo 'SCM_DO_BUILD_DURING_DEPLOYMENT=true' >> .deployment
+      
+    
+
+    - name: 'Clean before deploy'
+      run: rm -rf .git
+
+    - name: 'Deploy to Azure Web App2'
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: 'badge-app'
+        slot-name: 'production' 
+        publish-profile: ${{ secrets.BD_BADGE_APP }}

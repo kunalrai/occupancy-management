@@ -1,0 +1,9 @@
+flask
+requests
+flask-limiter
+python-dotenv
+razorpay
+flask_cors
+setuptools
+flask_sqlalchemy
+pandas

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge Access Data Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-blue-800 to-blue-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-id-card-alt text-2xl mr-3"></i>
+                    <span class="font-semibold text-xl">Badge Access Manager</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('home') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Home</a>
+                    <a href="{{ url_for('upload') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Upload</a>
+                    <a href="{{ url_for('dashboard') }}" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-b from-blue-900 to-blue-800 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="fade-in">
+                <h1 class="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
+                    Badge Access Data Management
+                </h1>
+                <p class="mt-4 text-xl max-w-3xl">
+                    Upload, validate, and manage badge access data with ease. Our system ensures your CSV data is properly formatted and securely stored.
+                </p>
+                <div class="mt-8">
+                    <a href="{{ url_for('upload') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors inline-flex items-center">
+                        <i class="fas fa-upload mr-2"></i> Upload CSV Data
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="ml-4 bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors inline-flex items-center">
+                        <i class="fas fa-chart-bar mr-2"></i> View Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Key Features
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    Our system provides everything you need to manage badge access data efficiently.
+                </p>
+            </div>
+
+            <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift">
+                    <div class="text-blue-800 mb-4">
+                        <i class="fas fa-file-csv text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">CSV Validation</h3>
+                    <p class="text-gray-600">
+                        Automatically validate your CSV files to ensure they contain the required columns and data formats.
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift">
+                    <div class="text-blue-800 mb-4">
+                        <i class="fas fa-database text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Secure Storage</h3>
+                    <p class="text-gray-600">
+                        All uploaded data is securely stored in our database with ACID compliance to ensure data integrity.
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover-lift">
+                    <div class="text-blue-800 mb-4">
+                        <i class="fas fa-chart-line text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Data Insights</h3>
+                    <p class="text-gray-600">
+                        View and analyze your badge access data through our comprehensive dashboard.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    How It Works
+                </h2>
+                <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+                    Follow these simple steps to manage your badge access data.
+                </p>
+            </div>
+
+            <div class="mt-12">
+                <div class="relative">
+                    <!-- Timeline line -->
+                    <div class="hidden md:block absolute top-0 left-1/2 w-0.5 h-full bg-blue-200 transform -translate-x-1/2"></div>
+                    
+                    <!-- Step 1 -->
+                    <div class="relative md:flex items-center mb-12">
+                        <div class="md:w-1/2 md:pr-8 mb-6 md:mb-0 fade-in" style="animation-delay: 0.1s;">
+                            <div class="bg-white p-6 rounded-lg shadow-md">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">1. Prepare Your CSV File</h3>
+                                <p class="text-gray-600">
+                                    Ensure your CSV contains the required columns: SiteName, GlobalId (GID), Initial Login Date, and Badge ID.
+                                </p>
+                                <a href="#" class="mt-4 text-blue-600 hover:text-blue-800 inline-flex items-center">
+                                    <i class="fas fa-download mr-1"></i> Download Template
+                                </a>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center absolute top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-blue-800 text-white">
+                            <span class="text-lg font-semibold">1</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="relative md:flex items-center mb-12">
+                        <div class="md:w-1/2 md:pl-8 ml-auto fade-in" style="animation-delay: 0.2s;">
+                            <div class="bg-white p-6 rounded-lg shadow-md">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">2. Upload Your CSV</h3>
+                                <p class="text-gray-600">
+                                    Use our upload form to submit your CSV file. The system will validate the format and data.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center absolute top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-blue-800 text-white">
+                            <span class="text-lg font-semibold">2</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="relative md:flex items-center">
+                        <div class="md:w-1/2 md:pr-8 fade-in" style="animation-delay: 0.3s;">
+                            <div class="bg-white p-6 rounded-lg shadow-md">
+                                <h3 class="text-xl font-semibold text-gray-900 mb-2">3. Review Your Data</h3>
+                                <p class="text-gray-600">
+                                    Check the dashboard to view your uploaded data and ensure everything is correct.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex items-center justify-center absolute top-6 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-blue-800 text-white">
+                            <span class="text-lg font-semibold">3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex md:justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-lg font-semibold">Badge Access Manager</h2>
+                    <p class="mt-2 text-gray-400 text-sm">
+                        Securely manage and analyze badge access data.
+                    </p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="{{ url_for('home') }}" class="text-gray-400 hover:text-white transition-colors">Home</a>
+                    <a href="{{ url_for('upload') }}" class="text-gray-400 hover:text-white transition-colors">Upload</a>
+                    <a href="{{ url_for('dashboard') }}" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-700 pt-4">
+                <p class="text-gray-400 text-sm">
+                    &copy; {{ current_year }} Badge Access Manager. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

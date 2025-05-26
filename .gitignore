@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# VS Code settings
+.vscode/
+
+# Mac and Linux
+.DS_Store
+*.swp
+
+# Python dependency logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Token and tag files
+dell_token_cache.json
+tags.txt
+
+# Output files
+*.zip
+*.csv
+warranty_report.csv
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+.cache
+
+# Pytest
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# PyInstaller
+dist/
+build/
+*.spec
