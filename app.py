@@ -8,10 +8,14 @@ from werkzeug.utils import secure_filename
 from collections import Counter
 from sqlalchemy import func
 from datetime import datetime
+from azure.storage.blob import BlobServiceClient
+from io import BytesIO
 
 
 # Load environment variables
 load_dotenv()
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
@@ -19,6 +23,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///bad
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+
+connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
+container_name = os.getenv("AZURE_CONTAINER_NAME")
+
+blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+container_client = blob_service_client.get_container_client(container_name)
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -29,9 +39,19 @@ db.init_app(app)
 def inject_current_year():
     return {'current_year': datetime.now().year}
 
+def upload_file_to_blob(file):
+    filename = secure_filename(file.filename)
+    timestamped_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+    blob_client = container_client.get_blob_client(timestamped_filename)
+
+    blob_client.upload_blob(file, overwrite=True)
+
+    return timestamped_filename 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -47,31 +67,35 @@ def upload():
 
         if file and utils.allowed_file(file.filename):
             try:
-                # Generate timestamp for filename
+                # Generate unique filename
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 filename = f"{timestamp}_{secure_filename(file.filename)}"
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 
-                # Save the file
-                file.save(filepath)
-                
-                # Validate and process the CSV
-                validation_result = utils.validate_csv(filepath)
-                
-                if validation_result['valid']:
-                    # Process and store the data
-                    utils.process_csv(filepath, db.session)
-                    flash('File uploaded and processed successfully!', 'success')
-                    return redirect(url_for('dashboard'))
-                else:
-                    # Remove invalid file
-                    os.remove(filepath)
+                # Read file into memory (BytesIO)
+                file_bytes = file.read()
+                file_stream = BytesIO(file_bytes)
+
+                # Validate CSV from memory
+                validation_result = utils.validate_csv(file_stream)
+                if not validation_result['valid']:
                     flash(f"Invalid CSV file: {validation_result['error']}", 'error')
                     return redirect(request.url)
-                    
+                
+                # Rewind file_stream for processing
+                file_stream.seek(0)
+                utils.process_csv(file_stream, db.session)
+
+                # Upload to Azure Blob Storage
+                blob_client = container_client.get_blob_client(filename)
+                blob_client.upload_blob(file_bytes, overwrite=True)
+
+                flash('File uploaded and processed successfully!', 'success')
+                return redirect(url_for('dashboard'))
+            
             except Exception as e:
                 flash(f'Error processing file: {str(e)}', 'error')
                 return redirect(request.url)
+
         else:
             flash('Invalid file type. Please upload a CSV file.', 'error')
             return redirect(request.url)
