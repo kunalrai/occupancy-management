@@ -7,3 +7,4 @@ flask_cors
 setuptools
 flask_sqlalchemy
 pandas
+azure-storage-blob
